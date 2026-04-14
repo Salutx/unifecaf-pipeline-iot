@@ -12,15 +12,15 @@ DB_PORT     = os.getenv("DB_PORT", "5432")
 DB_NAME     = os.getenv("DB_NAME", "iot_db")
 DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
-
-def conectar():
+def connect_db():
+    os.system("cls" if os.name == "nt" else "clear")
     engine = create_engine(DATABASE_URL)
-    print("Conexao com o banco estabelecida!")
+    print("▸ Conexao com o banco estabelecida!")
     return engine
 
 
-def carregar_csv(caminho: str) -> pd.DataFrame:
-    print(f"Lendo arquivo: {caminho}")
+def upload_csv(caminho: str) -> pd.DataFrame:
+    print(f"▸ Lendo arquivo: {caminho}")
     df = pd.read_csv(caminho)
     df.columns = [c.strip().lower().replace("/", "_").replace(" ", "_") for c in df.columns]
     rename_map = {
@@ -33,17 +33,17 @@ def carregar_csv(caminho: str) -> pd.DataFrame:
     df["reading_timestamp"] = pd.to_datetime(df["reading_timestamp"], dayfirst=True, errors="coerce")
     df["temperature"] = pd.to_numeric(df["temperature"], errors="coerce")
     df.dropna(subset=["temperature", "reading_timestamp"], inplace=True)
-    print(f"{len(df):,} registros carregados apos limpeza.")
+    print(f"▸ {len(df):,} registros carregados apos limpeza.")
     return df
 
 
-def inserir_dados(df: pd.DataFrame, engine):
-    print("Inserindo dados no PostgreSQL...")
+def insert_data(df: pd.DataFrame, engine):
+    print("▸ Inserindo dados no PostgreSQL...")
     df.to_sql("temperature_readings", con=engine, if_exists="replace", index=False, chunksize=10_000)
-    print(f"{len(df):,} registros inseridos!")
+    print(f"▸ {len(df):,} registros inseridos!")
 
 
-def criar_views(engine):
+def create_views(engine):
     sql = """
     CREATE OR REPLACE VIEW avg_temp_por_dispositivo AS
     SELECT device_id,
@@ -70,20 +70,21 @@ def criar_views(engine):
     with engine.connect() as conn:
         conn.execute(text(sql))
         conn.commit()
-    print("3 views SQL criadas!")
+    print("▸ 3 views SQL criadas!")
 
 
 def main():
     csv_path = os.path.join(os.path.dirname(__file__), "..", "data", "iot-temp.csv")
     if not os.path.exists(csv_path):
-        print(f"ERRO: Arquivo nao encontrado em {csv_path}")
-        print("Baixe em: https://www.kaggle.com/datasets/atulanandjha/temperature-readings-iot-devices")
+        os.system("cls" if os.name == "nt" else "clear")
+        print(f"▸ ERRO: Arquivo nao encontrado em {csv_path}")
+        print("▸ Baixe em: https://www.kaggle.com/datasets/atulanandjha/temperature-readings-iot-devices")
         return
-    engine = conectar()
-    df = carregar_csv(csv_path)
-    inserir_dados(df, engine)
-    criar_views(engine)
-    print("\nPipeline concluido! Execute: streamlit run src/dashboard.py")
+    engine = connect_db()
+    df = upload_csv(csv_path)
+    insert_data(df, engine)
+    create_views(engine)
+    print("\n▸ Pipeline concluido! Execute: python -m streamlit run src/dashboard.py")
 
 
 if __name__ == "__main__":
