@@ -4,25 +4,28 @@ This project builds an end-to-end data pipeline using real temperature sensor re
 
 #### HOW TO EXECUTE
 
-1. <strong>Install the dependencies</strong>: <code>npm install</code>
-2. <strong>Run the project</strong>: <code>npm run start</code>
-3. <strong>Open the project</strong>: Scan the QR code with <a href="https://expo.dev/go">Expo Go</a>.
-4. <strong>Authentication</strong>: Log in using the masked credentials at <a href="./context/AuthContext/AuthContext.constants.ts">AuthContext Constants</a>.
+1. <strong>Create the Python virtual environment</strong>: <code>python -m venv venv
+   </code>
+2. <strong>Deploy the database using Docker</strong>: <code>docker compose up -d</code>
+3. <strong>Enter the information into the database</strong>: <code>python src/ingest.py</code>
+4. <strong>Open the dashboard</strong>: <code>python -m streamlit run src/dashboard.py</code>
 
 #### DEPENDENCIES
 
-- React Native (Expo);
-- React Tanstack Query;
-- Axios;
+- Docker
+- Python
+- Stremlit
+- Plotly
+- SQL ALchemy
 
 <hr>
 
 #### PREVIEW
 
 <div>
-<img src="./preview/login-page.jpeg" alt="Login Page" width="200px" />
-<img src="./preview/products.jpeg" alt="Products Page" width="200px" />
-<img src="./preview/product-detail.jpeg" alt="Product Detail Page" width="200px" />
+<img src="./preview/graph-1.png" alt="Gráfico 1" width="200px" />
+<img src="./preview/graph-2.png" alt="Gráfico 2" width="200px" />
+<img src="./preview/graph-3.png" alt="Gráfico 3" width="200px" />
 <div>
 
 <hr>
