@@ -6,9 +6,10 @@ This project builds an end-to-end data pipeline using real temperature sensor re
 
 1. <strong>Create the Python virtual environment</strong>: <code>python -m venv venv
    </code>
-2. <strong>Deploy the database using Docker</strong>: <code>docker compose up -d</code>
-3. <strong>Enter the information into the database</strong>: <code>python src/ingest.py</code>
-4. <strong>Open the dashboard</strong>: <code>python -m streamlit run src/dashboard.py</code>
+2. <strong>Install the dependencies</strong>: <code>pip install -r requirements.txt</code>
+3. <strong>Deploy the database using Docker</strong>: <code>docker compose up -d</code>
+4. <strong>Enter the information into the database</strong>: <code>python src/ingest.py</code>
+5. <strong>Open the dashboard</strong>: <code>python -m streamlit run src/dashboard.py</code>
 
 #### DEPENDENCIES
 
